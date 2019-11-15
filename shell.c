@@ -53,6 +53,7 @@ void main(void)
 		perror("Failed to allocate buffer");
 
 	/* print command prompt */
+	write(1, "$ ", 2);
 
 	/* read command line */
 	_getline(&line);
