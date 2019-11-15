@@ -6,19 +6,50 @@
  * @size: length of command line
  *
  */
-ssize_t _getline(char **line)
+ssize_t _getline(char **line, size_t *line_size, FILE *stream)
 {
-	ssize_t read_cnt;
+	ssize_t read_cnt, read_total = 0;
+	size_t offset; /* line offset for each iteration */
+	char *buffer = malloc(sizeof(char) * 1024);
+
+	if (!buffer) /* error if malloc fail */
+	{
+		perror("Allocation failed");
+		return (-1);
+	}
 
 	/* read stdin to dynamic buffer */
-	read_cnt = read(STDIN_FILENO, *line, ARG_MAX);
-	if (read_cnt < 0) /* check for read failure */
-		return (-1);
+	while ((read_cnt = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0)
+	{
+		if (read_cnt == -1) /* check for read failure */
+			return (-1);
+		
+		read_total += read_cnt; /* add num of bytes last read to total */
 
-	(*line)[read_cnt] = '\0'; /* null-terminate */
+		if (read_cnt) /* if new text read */
+		{
+			read_total += read_cnt; /* add num of bytes last read to total */
+
+			/* reallocate line to receive new text */
+			*line = _realloc(*line, (sizeof(char) * read_total));
+			if (!(*line)) /* check for reallocation fail */
+			{
+				perror("Reallocation failed");
+				return (-1);
+			}
+
+			/* copy buffer to line from current offset */
+			_strncpy(((*line) + offset), buffer, read_cnt);
+
+			offset = read_total; /* advance line offset */
+		}
+		if ((*line)[offset - 1] == '\n') /* if line is \n terminated */
+			break; /* break read loop */
+	}
+	(*line)[offset] = '\0'; /* null-terminate line */
 
 	/* return total number of bytes read */
-	return (read_cnt);
+	return (*line_size = offset);
 }
 
 /**
@@ -33,7 +64,7 @@ char *_strtok(char *line)
 /**
  *
  *
- */
+*/
 _execute(char *tok)
 {
 	execve();
@@ -46,17 +77,14 @@ _execute(char *tok)
  */
 void main(void)
 {
-	char *line = malloc(sizeof(char) * ARG_MAX);
-
-	/* check for allocation fail */
-	if (!line)
-		perror("Failed to allocate buffer");
+	char *line;
+	size_t line_size = 0;
 
 	/* print command prompt */
 	write(1, "$ ", 2);
 
 	/* read command line */
-	_getline(&line);
+	_getline(&line, &line_size, STDIN_FILENO);
 
 	/* parse command line */
 	_strtok();
