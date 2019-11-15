@@ -10,4 +10,15 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+/**
+ * struct string_list - Singly linked list
+ * @string: A string
+ * @next: A pointer to the next node
+ */
+typedef struct string_list
+{
+	char *string;
+	struct string_list *next;
+} s_list;
+
 #endif
