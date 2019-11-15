@@ -12,13 +12,17 @@
 
 /**
  * struct string_list - Singly linked list
- * @string: A string
+ * @token: A string
  * @next: A pointer to the next node
  */
 typedef struct string_list
 {
-	char *string;
-	struct string_list *next;
+	char *token;
+	s_list *next;
 } s_list;
+
+s_list *add_node_end(s_list **head, const char *tok);
+
+void free_list(s_list *head);
 
 #endif
