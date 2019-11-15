@@ -11,19 +11,8 @@
 #include <fcntl.h>
 #include <errno.h>
 
-/**
- * struct string_list - Singly linked list
- * @token: A string
- * @next: A pointer to the next node
- */
-typedef struct string_list
-{
-	char *token;
-	s_list *next;
-} s_list;
-
-s_list *add_node_end(s_list **head, const char *tok);
-
-void free_list(s_list *head);
+/* HELPER FUNCTIONS */
+int _strlen(char *s);
+char *_strncpy(char *dest, const char *src, int n);
 
 #endif
