@@ -3,13 +3,16 @@
 * _strlen - Function that finds the length of a string
 * @s: string that the length of is found
 *
-* Return: length of the @s
+* Return: length of s, 0 if s is NULL
 */
 int _strlen(char *s)
 {
 	/* variable to loop through string to get length */
 	int len = 0;
 
+	if (!s) /* if NULL pointer, return 0 */
+		return (len);
+	
 	/* Loop through string, checking for null byte */
 	while (s[len] != '\0')
 		len++;
