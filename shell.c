@@ -10,7 +10,7 @@ ssize_t _getline(char **line, size_t *line_size, FILE *stream)
 {
 	ssize_t read_cnt, read_total = 0;
 	size_t offset; /* line offset for each iteration */
-	char *buffer = malloc(sizeof(char) * 1024);
+	char *buffer = alloc_mngr(buffer, (sizeof(char) * 1024));
 
 	if (!buffer) /* error if malloc fail */
 	{
@@ -24,14 +24,12 @@ ssize_t _getline(char **line, size_t *line_size, FILE *stream)
 		if (read_cnt == -1) /* check for read failure */
 			return (-1);
 		
-		read_total += read_cnt; /* add num of bytes last read to total */
-
 		if (read_cnt) /* if new text read */
 		{
 			read_total += read_cnt; /* add num of bytes last read to total */
 
 			/* reallocate line to receive new text */
-			*line = _realloc(*line, (sizeof(char) * read_total));
+			*line = alloc_mngr(&(*line), (sizeof(char) * read_total));
 			if (!(*line)) /* check for reallocation fail */
 			{
 				perror("Reallocation failed");
