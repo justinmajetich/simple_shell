@@ -30,8 +30,11 @@ typedef struct allocation_history
 /* EXTERN VARIABLES */
 extern mem_list *mem_head = NULL;
 
-/* HELPER FUNCTIONS */
-int _strlen(char *s);
-char *_strncpy(char *dest, const char *src, int n);
+/* MAIN FUNCTIONS */
+char **_strtok(char *line);
+
+/* STRING HELPER FUNCTIONS */
+size_t _strlen(char *s);
+char *_strncpy(char *dest, const char *src, size_t n);
 
 #endif

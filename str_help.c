@@ -1,14 +1,15 @@
 #include "shell.h"
+
 /**
 * _strlen - Function that finds the length of a string
 * @s: string that the length of is found
 *
 * Return: length of s, 0 if s is NULL
 */
-int _strlen(char *s)
+size_t _strlen(char *s)
 {
 	/* variable to loop through string to get length */
-	int len = 0;
+	size_t len = 0;
 
 	if (!s) /* if NULL pointer, return 0 */
 		return (len);
@@ -28,9 +29,9 @@ int _strlen(char *s)
  *
  * Return: string copied to i.e dest
  */
-char *_strncpy(char *dest, const char *src, int n)
+char *_strncpy(char *dest, const char *src, size_t n)
 {
-	int i = 0;
+	size_t i = 0;
 
 	while (i < n)
 	{

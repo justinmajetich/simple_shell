@@ -60,14 +60,13 @@ _execute(char *tok)
 }
 
 /**
- *
- *
- *
+ * main - The main function called after command line input
  */
 void main(void)
 {
 	char *line;
 	size_t line_size = 0;
+	char **tok_array;
 
 	/* print command prompt */
 	write(1, "$ ", 2);
@@ -75,8 +74,8 @@ void main(void)
 	/* read command line */
 	_getline(&line, &line_size, STDIN_FILENO);
 
-	/* parse command line */
-	_strtok();
+	/* set 2D array to parsed command line */
+	tok_array = _strtok();
 
 	/* execute command line */
 	_execute();
