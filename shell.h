@@ -28,10 +28,16 @@ typedef struct allocation_history
 } mem_list;
 
 /* EXTERN VARIABLES */
-extern mem_list *mem_head = NULL;
+mem_list *mem_head;
 
 /* MAIN FUNCTIONS */
 char **_strtok(char *line);
+
+/* MEMORY FUNCTIONS */
+char *alloc_mngr(char *ptr, size_t size);
+mem_list *add_mem_node(mem_list **head, char *ptr);
+void free_mem_list(mem_list **head);
+char *_realloc(char *ptr, size_t new_size);
 
 /* STRING HELPER FUNCTIONS */
 size_t _strlen(char *s);

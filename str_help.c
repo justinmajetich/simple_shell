@@ -12,13 +12,9 @@ size_t _strlen(char *s)
 	size_t len = 0;
 
 	if (!s) /* if NULL pointer, return 0 */
-		return (len);
-	
-	/* Loop through string, checking for null byte */
-	while (s[len] != '\0')
-		len++;
+		while (s[len] != '\0') /* Loop string til null byte */
+			len++;
 
-	/* return length variable once null byte is reached */
 	return (len);
 }
 /**

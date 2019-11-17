@@ -1,5 +1,4 @@
 #include "shell.h"
-
 /**
  * _getline - retrieve command line
  * @line: buffer to store command line
@@ -64,6 +63,7 @@ _execute(char *tok)
  */
 void main(void)
 {
+	extern mem_list *mem_head;
 	char *line;
 	size_t line_size = 0;
 	char **tok_array;

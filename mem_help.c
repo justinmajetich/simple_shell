@@ -6,13 +6,11 @@
  *
  * Return: pointer to allocated space on Success, NULL on fail
  */
-char *alloc_mngr(char **ptr, size_t size)
+char *alloc_mngr(char *ptr, size_t size)
 {
-	mem_list *mem_head; /* extern; declared in header */
-
 	/* allocated space */
-	*ptr = _realloc(*ptr, size);
-	if (!(*ptr)) /* check for alloc fail */
+	ptr = _realloc(ptr, size);
+	if (!(ptr)) /* check for alloc fail */
 	{
 		perror("Allocation fail");
 		free_mem_list(&mem_head);
@@ -20,7 +18,7 @@ char *alloc_mngr(char **ptr, size_t size)
 	}
 
 	/* archive allocation in list */
-	mem_head = add_mem_node(&mem_head, *ptr);
+	mem_head = add_mem_node(&mem_head, ptr);
 
 	/* return pointer to newly allocated mem */
 	return (ptr);
