@@ -16,13 +16,13 @@ char **_strtok(char *line)
 	size_t tok_amnt;
 	size_t tok_len = 0, tok_curr = 1;
 	size_t line_it = 0, tok_it = 0, i = 0;
-	char **tok_array;
+	char **tok_array = NULL;
 
 	tok_amnt = count_tokens(line);
 
 	/* **TO CHANGE. INSERT ALLOC_MNGR()** */
 	alloc_size = (tok_amnt + 1) * (sizeof(char *));
-	tok_array = malloc(alloc_size);
+	tok_array = (char **)alloc_mngr((char *)tok_array, alloc_size);
 	if (tok_array == NULL)
 		return (NULL);
 
@@ -34,7 +34,7 @@ char **_strtok(char *line)
 
 		/* **TO CHANGE. INSERT ALLOC_MNGR()** */
 		alloc_size = (tok_len + 1) * (sizeof(char));
-		tok_array[i] = malloc(alloc_size);
+		tok_array[i] = alloc_mngr(tok_array[i], alloc_size);
 		if (tok_array[i] == NULL)
 			return (NULL);
 
@@ -87,12 +87,12 @@ size_t count_tokens(char *line)
  */
 size_t token_length(char *line, size_t tok_need)
 {
-	size_t it = 0, tok_len = 0, tok_curr = 0;
+	size_t it = 0, tok_len = 0, tok_curr = 1;
 
 	/* Sets the iterator to where the needed token is within line */
 	while (tok_curr < tok_need)
 	{
-		if (line[it - 1] == ' ' || line[it - 1] == '\t')
+		if ((line[it - 1] == ' ' || line[it - 1] == '\t'))
 			if (line[it] != ' ' && line[it] != '\t')
 				tok_curr++;
 
