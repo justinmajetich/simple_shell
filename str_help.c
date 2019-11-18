@@ -11,7 +11,7 @@ size_t _strlen(char *s)
 	/* variable to loop through string to get length */
 	size_t len = 0;
 
-	if (!s) /* if NULL pointer, return 0 */
+	if (s) /* if NULL pointer, return 0 */
 		while (s[len] != '\0') /* Loop string til null byte */
 			len++;
 
