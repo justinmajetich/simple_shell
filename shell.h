@@ -27,11 +27,27 @@ typedef struct allocation_history
 
 } mem_list;
 
+/**
+ * struct built_ins - catalogue built-in functions
+ * @cmd: command name
+ * @fp: pointer to named function
+ */
+typedef struct built_in_fp
+{
+	char *cmd;
+	int (*fp)(char * const*);
+} built_in;
+
 /* EXTERN VARIABLES */
 mem_list *mem_head;
 
 /* MAIN FUNCTIONS */
 char **_strtok(char *line);
+
+/* EXECUTION FUNCTIONS */
+int exec_mngr(char *const *argv);
+int exec_builtin(char *const *argv);
+int exec_external(char *const *argv);
 
 /* MEMORY FUNCTIONS */
 char *alloc_mngr(char *ptr, size_t size);
