@@ -69,7 +69,7 @@ size_t count_tokens(char *line)
 	/* Loops through line and counts the amount of tokens */
 	while (line[it] != '\0')
 	{
-		if (line[it - 1] == ' ' || line[it - 1] == '\t')
+		if ((line[it + 1] == ' ' || line[it + 1] == '\t') || line[it + 1] == '\0')
 			if (line[it] != ' ' && line[it] != '\t')
 				tok_amnt++;
 		it++;
