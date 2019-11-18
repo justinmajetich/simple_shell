@@ -1,6 +1,5 @@
 #include "shell.h"
 
-char **mal_sin_tok(char *line);
 size_t count_tokens(char *line);
 size_t token_length(char *line, size_t tok_need);
 
@@ -12,95 +11,69 @@ size_t token_length(char *line, size_t tok_need);
  */
 char **_strtok(char *line)
 {
-	size_t t_end = 0, i = 0, j = 0, l_start = 0;
-	size_t tok_amnt = count_tokens(line);
+	/* Initalize needed variables */
+	size_t alloc_size;
+	size_t tok_amnt;
 	size_t tok_len = 0, tok_curr = 1;
-	char **list;
+	size_t line_it = 0, tok_it = 0, i = 0;
+	char **tok_array;
 
-	if (tok_amnt == 1)
-		list = mal_sin_tok(line);
-	else
-	{
-		list = malloc((tok_amnt + 1) * sizeof(char *));
-		if (list == NULL)
-		{
-			printf("There was a malloc fail");
-			exit(EXIT_FAILURE);
-		}
+	tok_amnt = count_tokens(line);
 
-		for (i = tok_curr - 1; tok_curr <= tok_amnt; tok_curr++, i++)
-		{
-			tok_len = token_length(line, tok_curr);
-
-			list[i] = malloc((tok_len + 1) * sizeof(char));
-			if (list[i] == NULL)
-			{
-				for (i = 0; i < tok_curr; i++)
-					free(list[i]);
-				free(list);
-				printf("There was a malloc fail.");
-				exit(EXIT_FAILURE);
-			}
-
-			t_end += tok_len;
-
-			for (j = 0; l_start < t_end; j++, l_start++)
-				list[i][j] = line[l_start];
-
-			list[i][j] = '\0';
-			l_start++;
-			t_end++;
-
-		}
-
-		list[i] = NULL;
-	}
-	return (list);
-}
-/**
- * **mal_sin_tok - A hard-coded version of a single token
- * @line: The string to add to the 2D array
- *
- * Return: Always the 2D array
- */
-char **mal_sin_tok(char *line)
-{
-	size_t i = 0;
-	size_t tok_len = _strlen(line);
-	char **list = malloc(2 * sizeof(char *));
-
-	if (list == NULL)
+	/* **TO CHANGE. INSERT ALLOC_MNGR()** */
+	alloc_size = (tok_amnt + 1) * (sizeof(char *));
+	tok_array = malloc(alloc_size);
+	if (tok_array == NULL)
 		return (NULL);
 
-	list[0] = malloc((tok_len + 1) * sizeof(char));
-	if (list[0] == NULL)
+	/* Main loop to fill allocated tok_array with tokens */
+	for (i = 0; tok_curr <= tok_amnt; tok_curr++, i++)
 	{
-		free(list[0]);
-		free(list);
+		/* Setting tok_len equal to length of current token */
+		tok_len = token_length(line, tok_curr);
+
+		/* **TO CHANGE. INSERT ALLOC_MNGR()** */
+		alloc_size = (tok_len + 1) * (sizeof(char));
+		tok_array[i] = malloc(alloc_size);
+		if (tok_array[i] == NULL)
+			return (NULL);
+
+		/* Helps set line_it to the position of the needed token */
+		while (line[line_it] == ' ' || line[line_it] == '\t')
+			line_it++;
+
+		/* Copying the token from line into tok_array */
+		for (tok_it = 0; tok_it < tok_len; tok_it++, line_it++)
+			tok_array[i][tok_it] = line[line_it];
+
+		/* Ending the token in the array with a null-byte */
+		tok_array[i][tok_it] = '\0';
 	}
 
-	for (i = 0; i < tok_len; i++)
-		list[0][i] = line[i];
+	/* Set last tok_array[i]'s to NULL */
+	tok_array[i] = NULL;
 
-	list[0][i] = '\0';
-	list[1] = NULL;
-
-	return (list);
+	return (tok_array);
 }
 
 /**
  * count_tokens - Counts the amount of tokens
  * @line: The string to count how many tokens it has
  *
- * Return: Always the amount of tokens
+ * Return: Always the total amount of tokens
  */
 size_t count_tokens(char *line)
 {
-	size_t i, tok_amnt = 1;
+	size_t it = 0, tok_amnt = 0;
 
-	for (i = 0; line[i] != '\0'; i++)
-		if (line[i] == ' ')
-			tok_amnt++;
+	/* Loops through line and counts the amount of tokens */
+	while (line[it] != '\0')
+	{
+		if ((line[it + 1] == ' ' || line[it + 1] == '\t') || line[it + 1] == '\0')
+			if (line[it] != ' ' && line[it] != '\t')
+				tok_amnt++;
+		it++;
+	}
 
 	return (tok_amnt);
 }
@@ -108,24 +81,33 @@ size_t count_tokens(char *line)
 /**
  * token_length - Count how long a specified token is
  * @line: The string containing the token
- * @tok_need: Specifying which token length is needed
+ * @tok_need: Specifys which token within line is needed
  *
  * Return: Always the length of the specified token
  */
 size_t token_length(char *line, size_t tok_need)
 {
-	size_t i = 0, tok_len = 0, tok_curr = 1;
+	size_t it = 0, tok_len = 0, tok_curr = 0;
 
-	for (i = 0; tok_curr <= tok_need; i++)
+	/* Sets the iterator to where the needed token is within line */
+	while (tok_curr < tok_need)
 	{
-		if (line[i] == ' ' || line[i] == '\0')
-		{
-			tok_curr++;
-			i++;
-		}
+		if (line[it - 1] == ' ' || line[it - 1] == '\t')
+			if (line[it] != ' ' && line[it] != '\t')
+				tok_curr++;
 
-		if (tok_curr == tok_need)
+		if (tok_curr != tok_need)
+			it++;
+	}
+
+	/* Counts the length of the token while iterating through line */
+	while ((line[it] != '\0') && (tok_curr == tok_need))
+	{
+		if (line[it] != ' ' &&  line[it] != '\t')
 			tok_len++;
+		else
+			tok_curr++;
+		it++;
 	}
 
 	return (tok_len);
