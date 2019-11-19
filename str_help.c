@@ -77,7 +77,7 @@ int _strcmp(char *s1, char *s2)
  */
 int _strncmp(char *s1, char *s2, size_t n)
 {
-	int i = 0;
+	size_t i = 0;
 
 	while (i < n && s1[i] != '\0') /* iterate until null-byte or first five bytes */
 	{
@@ -91,4 +91,28 @@ int _strncmp(char *s1, char *s2, size_t n)
 		return (s1[i] - s2[i]);
 
 	return (0);
+}
+/**
+ * *_strcat - concatenates two strings
+ * @dest: string to append to
+ * @src: sring to append
+ * Return: pointer to concatenated string
+ */
+char *_strcat(char *dest, char *src)
+{
+	int src_i = 0, dest_i = 0;
+
+	for (; dest[dest_i] != '\0';)
+		dest_i++;
+
+	for (; src[src_i] != '\0';)
+	{
+		dest[dest_i] = src[src_i];
+		src_i++;
+		dest_i++;
+	}
+
+	dest[dest_i] = '\0';
+
+	return (dest);
 }
