@@ -58,7 +58,7 @@ int exec_external(char *const *argv)
 	path = get_path(argv); /* retrieve separated, concat paths */
 
 	for (i = 0; path[i]; i++) /* for every path */
-		if (access(path[i], (R_OK | X_OK)) == 0) /* check for existence and exec perm */
+		if (access(path[i], (R_OK | X_OK)) == 0) /* check if exists and exec perm */
 		{
 			switch ((pid = fork())) /* fork current process */
 			{
@@ -66,7 +66,7 @@ int exec_external(char *const *argv)
 					perror(argv[0]);
 					return (-1);
 				case 0: /* returned to child */
-					execve(path[i], argv, env); /* execute cmd */
+					execve(path[i], argv, environ); /* execute cmd */
 					perror(argv[0]); /* on exec fail */
 					exit(EXIT_FAILURE); /* exits child, not parent ???? */
 				default: /* returned to parent */
@@ -77,9 +77,4 @@ int exec_external(char *const *argv)
 			}
 		}
 	return (-1); /* file/dir not found */
-}
-/**
- */
-char **get_path()
-{
 }
