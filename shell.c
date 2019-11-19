@@ -63,7 +63,8 @@ _execute(char *tok)
  */
 void main(void)
 {
-	extern mem_list *mem_head;
+	char **environ;
+	mem_list *mem_head;
 	char *line;
 	size_t line_size = 0;
 	char **tok_array;

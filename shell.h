@@ -32,14 +32,15 @@ typedef struct allocation_history
  * @cmd: command name
  * @fp: pointer to named function
  */
-typedef struct built_in_fp
+typedef struct built_ins
 {
 	char *cmd;
 	int (*fp)(char * const*);
 } built_in;
 
 /* EXTERN VARIABLES */
-mem_list *mem_head;
+extern mem_list *mem_head;
+extern char **environ;
 
 /* MAIN FUNCTIONS */
 char **_strtok(char *line);

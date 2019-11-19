@@ -3,7 +3,7 @@
  * alloc_mngr - allocate space and archive allocations
  * @ptr: pointer to allocated memory
  * @size: size of desired allocation
- *
+  *
  * Return: pointer to allocated space on Success, NULL on fail
  */
 char *alloc_mngr(char *ptr, size_t size)
