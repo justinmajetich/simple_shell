@@ -67,3 +67,28 @@ int _strcmp(char *s1, char *s2)
 		return (s1[i] - s2[i]);
 	return (0);
 }
+/**
+ * _strncmp - compare strings up to n bytes
+ * @s1: string to compare
+ * @s2: string to compare against
+ * @n: bytes to compare
+ *
+ * Return: n < 0 if s1 is lesser, n > 0 if greater, 0 if equal
+ */
+int _strncmp(char *s1, char *s2, size_t n)
+{
+	int i = 0;
+
+	while (i < n && s1[i] != '\0') /* iterate until null-byte or first five bytes */
+	{
+		if (s1[i] < s2[i]) /* if s1 is less, return neg num */
+			return (s1[i] - s2[i]);
+		if (s1[i] > s2[i]) /* if s1 is greater, return pos num */
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	if (i < n && s2[i] != '\0') 
+		return (s1[i] - s2[i]);
+
+	return (0);
+}
