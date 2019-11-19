@@ -4,7 +4,6 @@
  */
 int main(void)
 {
-	mem_list *mem_head;
 	char *line = NULL;
 	size_t line_size = 0;
 	char **tok_array = NULL;
