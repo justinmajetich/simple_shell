@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -45,6 +46,8 @@ extern char **environ;
 
 /* MAIN FUNCTIONS */
 char **_strtok(char *line);
+ssize_t _getline(char **line, size_t *line_size);
+char **get_path(char * const* argv);
 
 /* EXECUTION FUNCTIONS */
 int exec_mngr(char *const *argv);
@@ -60,5 +63,10 @@ char *_realloc(char *ptr, size_t new_size);
 /* STRING HELPER FUNCTIONS */
 size_t _strlen(char *s);
 char *_strncpy(char *dest, const char *src, size_t n);
+int _strcmp(char *s1, char *s2);
+int _strncmp(char *s1, char *s2, size_t n);
+
+/* BUILT-IN FUNCTIONS */
+int builtin_exit(char *const* argv);
 
 #endif
