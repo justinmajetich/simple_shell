@@ -1,10 +1,9 @@
 #include "shell.h"
 /**
+ * exec_mngr - directs cmd table to appropriate execution flow
+ * @argv: cmd table (i.e. list of user args)
  *
- *
- *
- *
- *
+ * Return: 0 on Success, -1 on Failure
  */
 int exec_mngr(char *const *argv)
 {
@@ -14,7 +13,7 @@ int exec_mngr(char *const *argv)
 	if (r_val == 0) /* execution success */
 		return (0);
 
-	r_val = (exec_external(argv); /* search and execute external cmd */
+	r_val = (exec_external(argv)); /* search and execute external cmd */
 	if (r_val == 0) /* execution success */
 		return (0);
 
@@ -22,11 +21,15 @@ int exec_mngr(char *const *argv)
 	return (-1); /* return error */
 }
 /**
+ * exec_builtin - identify and execute built-in commands
+ * @argv: cmd table (i.e. list of user args)
+ *
+ * Return: 0 on Sucess, -1 on Failure
  */
 int exec_builtin(char *const *argv)
 {
 	built_in fps[] = { /* stores func pointers to built-in commands */
-		{"exit", builtin_exit},
+		/*{"exit", builtin_exit},*/
 		{NULL, NULL}
 	};
 
@@ -48,6 +51,10 @@ int exec_builtin(char *const *argv)
 	return (-1); /* command not found */
 }
 /**
+ * exec_external - identify and execute external commands
+ * @argv: cmd table (i.e. list of user args)
+ *
+ * Return: 0 on Sucess, -1 on Failure
  */
 int exec_external(char *const *argv)
 {

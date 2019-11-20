@@ -1,7 +1,12 @@
 #include "shell.h"
 size_t path_len(char *path_ptr);
 size_t path_count(char *paths);
-
+/**
+ * get_path - locate, separate, and concat paths with cmd into pointer array
+ * @argv: command table (inly cmd name used)
+ *
+ * Return: pointer to array of concatenated paths
+ */
 char **get_path(char *const *argv)
 {
 	char *path_ptr = NULL; /* pointer to PATH in environ */
@@ -14,13 +19,12 @@ char **get_path(char *const *argv)
 	{
 		if (_strncmp(ref, environ[env_i], 5) == 0) /* check for match */
 		{
-			path_ptr = &environ[env_i][5]; /* assign ptr to begin of PATH value */	
+			path_ptr = &environ[env_i][5]; /* assign ptr to begin of PATH value */
 			path_cnt = path_count(path_ptr); /* take num of paths */
-
 			/* allocate memory for pointer to n pointers (+1 for NULL) */
 			paths = (char **)alloc_mngr((char *)paths, (sizeof(char *) * (path_cnt + 1)));
 
-			for (p_i = 0; p_i < path_cnt; p_i++) /* iterate once for each path */
+			for (p_i = 0; p_i < path_cnt; p_i++) /* iterate for each path */
 			{
 				/* add length of path, '/', cmd & '\0' */
 				path_cat_size = (path_len(path_ptr) + _strlen(argv[0]) + 2);
@@ -59,7 +63,7 @@ size_t path_count(char *paths)
 	for (i = 0; paths[i]; i++)
 		if ((paths[i + 1] == ':' || paths[i + 1] == '\0'))
 			path_cnt++;
-	
+
 	return (path_cnt);
 }
 /**

@@ -48,7 +48,7 @@ extern char **environ;
 /* MAIN FUNCTIONS */
 char **_strtok(char *line);
 ssize_t _getline(char **line, size_t *line_size);
-char **get_path(char * const* argv);
+char **get_path(char * const *argv);
 
 /* EXECUTION FUNCTIONS */
 int exec_mngr(char *const *argv);
@@ -70,6 +70,6 @@ int _strcmp(char *s1, char *s2);
 char *_strcat(char *dest, char *src);
 
 /* BUILT-IN FUNCTIONS */
-int builtin_exit(char *const* argv);
+/*int builtin_exit(char *const *argv);*/
 
 #endif

@@ -39,7 +39,7 @@ mem_list *add_mem_node(mem_list **head, char *ptr)
 	new = malloc(sizeof(mem_list));
 	if (!new)
 		return (NULL);
-	
+
 	/* initialize new node */
 	new->mem_ptr = ptr;
 	new->next = *head;
