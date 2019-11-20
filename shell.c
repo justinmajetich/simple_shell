@@ -23,7 +23,6 @@ int main(void)
 		
 		if (tok_array) /* if token present */
 			exec_mngr(tok_array); /* pass args to executor */
-
 		/* Free everything allocated */
 		free_mem_list(&mem_head);
 

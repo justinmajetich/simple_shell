@@ -12,7 +12,7 @@ char *alloc_mngr(char *ptr, size_t size)
 	ptr = _realloc(ptr, size);
 	if (!(ptr)) /* check for alloc fail */
 	{
-		perror("Allocation fail");
+		perror("hsh");
 		free_mem_list(&mem_head);
 		return (NULL);
 	}

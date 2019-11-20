@@ -10,21 +10,14 @@ ssize_t _getline(char **line, size_t *line_size)
 {
 	ssize_t read_cnt, read_total = 0;
 	size_t offset = 0; /* line offset for each iteration */
-	char *buffer = NULL;
+	char buffer[1024];
 
-	buffer = alloc_mngr(buffer, (sizeof(char) * 1024));
-
-	if (!buffer) /* error if malloc fail */
-	{
-		perror("Allocation failed");
-		return (-1);
-	}
 	/* read stdin to dynamic buffer */
 	while ((read_cnt = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0)
 	{
 		if (read_cnt == -1) /* check for read failure */
 			return (-1);
-
+		
 		if (read_cnt) /* if new text read */
 		{
 			read_total += read_cnt; /* add num of bytes last read to total */
