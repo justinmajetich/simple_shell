@@ -12,7 +12,10 @@ int builtin_exit(char *const * argv)
 	int answer;
 
 	if (argv[1] == NULL)
+	{
+		free_mem_list(&mem_head);
 		exit(EXIT_SUCCESS);
+	}
 	else
 	{
 		answer = _atoi(argv[1]);
@@ -23,6 +26,7 @@ int builtin_exit(char *const * argv)
 				printf("This is a failure\n");
 				return (-1);
 			default:
+				free_mem_list(&mem_head);
 				exit(answer);
 		}
 	}
