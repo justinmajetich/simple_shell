@@ -21,8 +21,8 @@ char **get_path(char *const *argv)
 		{
 			path_ptr = &environ[env_i][5]; /* assign ptr to begin of PATH value */
 			path_cnt = path_count(path_ptr); /* take num of paths */
-			/* allocate memory for pointer to n pointers (+1 for NULL) */
-			paths = (char **)alloc_mngr((char *)paths, (sizeof(char *) * (path_cnt + 1)));
+			/* allocate memory for pointer to n pointers (+2 for argv[0] & NULL row) */
+			paths = (char **)alloc_mngr((char *)paths, (sizeof(char *) * (path_cnt + 2)));
 
 			for (p_i = 0; p_i < path_cnt; p_i++) /* iterate for each path */
 			{
@@ -38,8 +38,10 @@ char **get_path(char *const *argv)
 				/* move ptr to beginning of next path */
 				path_ptr = (path_ptr + (path_len(path_ptr) + 1));
 			}
-
-			paths[p_i] = NULL; /* null-terminate list */
+			/* allocate for user arg alone */
+			paths[p_i] = alloc_mngr(paths[p_i], (sizeof(char) * (_strlen(argv[0]) + 1)));
+			_strncpy(paths[p_i], argv[0], _strlen(argv[0])); /* copy arg to path array */
+			paths[++p_i] = NULL; /* null-terminate list */
 			return (paths);
 		}
 		env_i++;
