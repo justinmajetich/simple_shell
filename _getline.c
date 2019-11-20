@@ -2,7 +2,7 @@
 /**
  * _getline - retrieve command line
  * @line: buffer to store command line
- * @size: length of command line
+ * @line_size: length of command line
  *
  * Return: Number of lines read on success or -1 on fail
  */
@@ -19,7 +19,6 @@ ssize_t _getline(char **line, size_t *line_size)
 		perror("Allocation failed");
 		return (-1);
 	}
-
 	/* read stdin to dynamic buffer */
 	while ((read_cnt = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0)
 	{
@@ -30,14 +29,13 @@ ssize_t _getline(char **line, size_t *line_size)
 		{
 			read_total += read_cnt; /* add num of bytes last read to total */
 
-			/* reallocate line to receive new text */
-			*line = alloc_mngr(*line, (sizeof(char) * read_total));
+			/* reallocate line to receive new text (+ 1 for null-byte) */
+			*line = alloc_mngr(*line, (sizeof(char) * (read_total + 1)));
 			if (!(*line)) /* check for reallocation fail */
 			{
 				perror("Reallocation failed");
 				return (-1);
 			}
-
 			/* copy buffer to line from current offset */
 			_strncpy(((*line) + offset), buffer, read_cnt);
 
@@ -48,6 +46,5 @@ ssize_t _getline(char **line, size_t *line_size)
 	}
 	(*line)[offset - 1] = '\0'; /* null-terminate line */
 
-	/* return total number of bytes read */
-	return (*line_size = offset);
+	return (*line_size = offset); /* return total number of bytes read */
 }
