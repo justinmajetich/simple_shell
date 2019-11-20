@@ -19,6 +19,8 @@ char **_strtok(char *line)
 	char **tok_array = NULL;
 
 	tok_amnt = count_tokens(line);
+	if (tok_amnt == 0)
+		return (NULL);
 
 	/* **TO CHANGE. INSERT ALLOC_MNGR()** */
 	alloc_size = (tok_amnt + 1) * (sizeof(char *));
