@@ -25,7 +25,7 @@ int main(void)
 			exec_mngr(tok_array); /* pass args to executor */
 
 		/* Free everything allocated */
-		/*free_mem_list(&mem_head);*/
+		free_mem_list(&mem_head);
 
 	line = NULL;
 	tok_array = NULL;

@@ -29,7 +29,7 @@ int exec_mngr(char *const *argv)
 int exec_builtin(char *const *argv)
 {
 	built_in fps[] = { /* stores func pointers to built-in commands */
-		/*{"exit", builtin_exit},*/
+		{"exit", builtin_exit},
 		{NULL, NULL}
 	};
 
