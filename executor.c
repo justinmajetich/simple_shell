@@ -62,7 +62,17 @@ int exec_external(char *const *argv)
 	pid_t pid; /* process ID */
 	int status, i; /* monitor child state changes */
 
-	path = get_path(argv); /* retrieve separated, concat paths */
+	if (path_check(argv)) /* if command name is path */
+	{
+		/* allocate memory for path list */
+		path = (char **)alloc_mngr((char *)path, (sizeof(char *) * 2));
+		/* allocate for first row - cmd name/path */
+		path[0] = alloc_mngr(path[0], (sizeof(char) * (_strlen(argv[0]) + 1)));
+		_strncpy(path[0], argv[0], _strlen(argv[0])); /* copy arg to path array */
+		path[1] = NULL; /* null-terminate list */
+	}
+	else /* if command name is not path */
+		path = get_path(argv); /* retrieve separated, concat paths */
 
 	for (i = 0; path[i]; i++) /* for every path */
 		if (access(path[i], (R_OK | X_OK)) == 0) /* check if exists and exec perm */

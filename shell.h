@@ -70,6 +70,11 @@ int _strncmp(char *s1, char *s2, size_t n);
 int _strcmp(char *s1, char *s2);
 char *_strcat(char *dest, char *src);
 
+/* PATH HELPER FUNCTIONS */
+size_t path_len(char *path_ptr);
+size_t path_count(char *paths);
+size_t path_check(char *const *argv);
+
 /* BUILT-IN FUNCTIONS */
 int builtin_exit(char *const *argv);
 
