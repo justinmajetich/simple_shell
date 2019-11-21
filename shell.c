@@ -12,6 +12,9 @@ int main(void)
 	int loop = 1; /* loop = temp loop driver */
 
 	do {
+		line = NULL;
+		tok_array = NULL;
+
 		/* print command prompt */
 		write(1, "$ ", 2);
 
@@ -22,12 +25,11 @@ int main(void)
 		tok_array = _strtok(line);
 		
 		if (tok_array) /* if token present */
-			exec_mngr(tok_array); /* pass args to executor */
-		free_mem_list(&mem_head);
+			if ((exec_mngr(tok_array)) == -1) /* pass args to executor */
+				perror("hsh"); /* print error on failure */
 
-	line = NULL;
-	tok_array = NULL;
-	
+		free_mem_list(&mem_head); /* free all allocated memory */
+
 	} while (loop);
 
 	return (0);

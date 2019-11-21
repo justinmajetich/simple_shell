@@ -17,7 +17,6 @@ int exec_mngr(char *const *argv)
 	if (r_val == 0) /* execution success */
 		return (0);
 
-	perror(argv[0]); /* print cmd name */
 	return (-1); /* return error */
 }
 /**
@@ -30,6 +29,7 @@ int exec_builtin(char *const *argv)
 {
 	built_in fps[] = { /* stores func pointers to built-in commands */
 		{"exit", builtin_exit},
+		{"env", builtin_env},
 		{NULL, NULL}
 	};
 
