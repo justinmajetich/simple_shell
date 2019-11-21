@@ -77,5 +77,6 @@ size_t path_check(char *const *argv);
 
 /* BUILT-IN FUNCTIONS */
 int builtin_exit(char *const *argv);
+int builtin_env(char *const *argv);
 
 #endif
