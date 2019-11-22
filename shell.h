@@ -13,6 +13,7 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <limits.h>
+#include <signal.h>
 
 /* STRUCTS */
 /**
