@@ -45,7 +45,6 @@ char *_strncpy(char *dest, const char *src, size_t n)
 	return (dest);
 }
 /**
- * _strcmp - compare strings
  * @s1: string to compare
  * @s2: string to compare against
  *

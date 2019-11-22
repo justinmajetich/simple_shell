@@ -42,8 +42,10 @@ typedef struct built_ins
 } built_in;
 
 /* EXTERN VARIABLES */
-extern mem_list *mem_head;
+extern mem_list *mem_head; /* freed each session iteration */
 mem_list *mem_head;
+extern mem_list *static_mem_head; /* freed on exit of shell session */
+mem_list *static_mem_head;
 extern char **environ;
 
 /* MAIN FUNCTIONS */
@@ -60,8 +62,10 @@ int exec_external(char *const *argv);
 char *alloc_mngr(char *ptr, size_t size);
 mem_list *add_mem_node(mem_list **head, char *ptr);
 void free_mem_list(mem_list **head);
+void free_static_mem_list(mem_list **head);
 char *_realloc(char *ptr, size_t new_size);
 char *_memset(char *s, char b, unsigned int n);
+void free_my_env(void);
 
 /* STRING HELPER FUNCTIONS */
 size_t _strlen(char *s);
@@ -70,6 +74,7 @@ int _strncmp(char *s1, char *s2, size_t n);
 int _strcmp(char *s1, char *s2);
 char *_strcat(char *dest, char *src);
 char *_revstr(char *s);
+char **clone_env(void);
 
 /* NUMBER HELP */
 char *_itoa(size_t number, char *buffer, int base);
@@ -82,6 +87,7 @@ size_t path_check(char *const *argv);
 /* BUILT-IN FUNCTIONS */
 int builtin_exit(char *const *argv);
 int builtin_env(char *const *argv);
+int builtin_cd(char *const *argv);
 
 /* ERROR FUNCTIONS */
 void print_err(size_t loop_cnt);

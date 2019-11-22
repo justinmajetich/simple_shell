@@ -6,8 +6,8 @@
  */
 int main(void)
 {
-	char *line;
-	char **tok_array;
+	char *line = NULL;
+	char **tok_array = NULL;
 	size_t line_size = 0;
 	size_t loop_cnt = 1; /* count iterations */
 
@@ -34,5 +34,6 @@ int main(void)
 
 	} while (1);
 
+	free_static_mem_list(&static_mem_head); /* free all persevering memory */
 	return (0);
 }
