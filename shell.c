@@ -6,10 +6,10 @@
  */
 int main(void)
 {
-	char *line = NULL;
+	char *line;
+	char **tok_array;
 	size_t line_size = 0;
-	char **tok_array = NULL;
-	int loop = 1; /* loop = temp loop driver */
+	size_t loop_cnt = 1; /* count iterations */
 
 	do {
 		line = NULL;
@@ -26,11 +26,13 @@ int main(void)
 		
 		if (tok_array) /* if token present */
 			if ((exec_mngr(tok_array)) == -1) /* pass args to executor */
-				perror("hsh"); /* print error on failure */
+				print_err(loop_cnt);
 
 		free_mem_list(&mem_head); /* free all allocated memory */
 
-	} while (loop);
+		loop_cnt++; /* increment loop count */
+
+	} while (1);
 
 	return (0);
 }

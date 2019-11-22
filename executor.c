@@ -80,11 +80,9 @@ int exec_external(char *const *argv)
 			switch ((pid = fork())) /* fork current process */
 			{
 				case -1: /* fork failure */
-					perror(argv[0]);
 					return (-1);
 				case 0: /* returned to child */
 					execve(path[i], argv, environ); /* execute cmd */
-					perror(argv[0]); /* on exec fail */
 					exit(EXIT_FAILURE); /* exits child, not parent ???? */
 				default: /* returned to parent */
 					if ((waitpid(pid, &status, 0)) == -1)

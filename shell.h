@@ -69,6 +69,10 @@ char *_strncpy(char *dest, const char *src, size_t n);
 int _strncmp(char *s1, char *s2, size_t n);
 int _strcmp(char *s1, char *s2);
 char *_strcat(char *dest, char *src);
+char *_revstr(char *s);
+
+/* NUMBER HELP */
+char *_itoa(size_t number, char *buffer, int base);
 
 /* PATH HELPER FUNCTIONS */
 size_t path_len(char *path_ptr);
@@ -78,5 +82,8 @@ size_t path_check(char *const *argv);
 /* BUILT-IN FUNCTIONS */
 int builtin_exit(char *const *argv);
 int builtin_env(char *const *argv);
+
+/* ERROR FUNCTIONS */
+void print_err(size_t loop_cnt);
 
 #endif
