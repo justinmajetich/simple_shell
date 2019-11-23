@@ -12,8 +12,9 @@ int builtin_exit(char *const * argv)
 	int answer;
 
 	if (argv[1] == NULL)
-	{ 
+	{
 		free_mem_list(&mem_head);
+		free_static_mem_list(&static_mem_head);
 		exit(EXIT_SUCCESS);
 	}
 	else
@@ -26,6 +27,7 @@ int builtin_exit(char *const * argv)
 				return (EXIT_FAILURE);
 			default:
 				free_mem_list(&mem_head);
+				free_static_mem_list(&static_mem_head);
 				exit(answer);
 		}
 	}
@@ -34,10 +36,6 @@ int builtin_exit(char *const * argv)
 int _atoi(char *status)
 {
 	int answer = 0, i = 0;
-
-	/* Do thing is it a word
-	if (status == max)
-		return(2147483647); */
 
 	if (status[i] == '-')
 		return (-1);
