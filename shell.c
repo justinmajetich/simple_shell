@@ -19,7 +19,7 @@ int main(void)
 		tok_array = NULL;
 
 		/* print command prompt */
-		write(1, "$ ", 2);
+		write(STDOUT_FILENO, "$ ", 2);
 
 		/* accounts for [CTRL + c] */
 		signal(SIGINT, recieve_sig);
@@ -48,5 +48,5 @@ int main(void)
 void recieve_sig(int signal __attribute__((unused)))
 {
 	/* prints the command line prompt */
-	write(1, "\n$ ", 3);
+	write(STDOUT_FILENO, "\n$ ", 3);
 }
