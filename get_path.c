@@ -43,6 +43,7 @@ char **get_path(char *const *argv)
 	}
 	return (NULL); /* failed to retrieve PATH */
 }
+
 /**
  * path_check - determine if command name includes path
  * @argv: command table
