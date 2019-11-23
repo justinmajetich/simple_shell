@@ -93,6 +93,7 @@ int cd_HOME(void);
 int cd_current(void);
 int cd_prev(void);
 int cd_parent(void);
+int cd_arg(char *arg);
 int cd_user(char *argv);
 int set_PWD(char *value);
 int set_OLDPWD(void);

@@ -13,16 +13,6 @@ int builtin_cd(char *const *argv)
 		if (cd_HOME()) /* move to HOME directory */
 			return (-1); /* on failure */
 	}
-	else if (path_check(&argv[1])) /* if arg is path */
-	{
-		if (chdir(argv[1]) == 0) /* change dir */
-		{
-			set_OLDPWD();
-			set_PWD(argv[1]);
-		}
-		else
-			return (-1); /* if chdir fails */
-	}
 	else if (!(_strcmp(argv[1], "."))) /* if arg is ".", change to current dir */
 	{
 		if (cd_current()) /* move to PWD */
@@ -45,8 +35,8 @@ int builtin_cd(char *const *argv)
 	}
 	else
 	{
-		errno = ENOENT;
-		return (-1); /* command/options not found */
+		if (cd_arg(argv[1])) /* move to designated dir */
+			return (-1); /* failure to change dir */
 	}
 	return (0); /* successful change of dir */
 }

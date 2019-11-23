@@ -1,5 +1,51 @@
 #include "shell.h"
 /**
+ * cd_arg - move to given path
+ * Return: 0 on Success, 1 on Failure
+ */
+int cd_arg(char *arg)
+{
+	char *target_dir = NULL;
+	char *path = NULL;
+	size_t len = 0;
+
+	if (chdir(arg) == 0) /* if arg is valid dir */
+	{
+		if (path_check(&arg)) /* if arg is path */
+		{
+			set_OLDPWD();
+			set_PWD(arg);
+			return (0);
+		}
+		else /* concat arg to PWD */
+		{
+			/* retrieve target path */
+			target_dir = get_target("PWD=");
+
+			/* take lengths of path and arg */
+			len = (_strlen(target_dir) + _strlen(arg));
+		
+			/* +2 for '/' and null-byte */
+			path = alloc_mngr(path, (sizeof(char) * (len + 2)));
+			if (!path) /* if malloc fail */
+				return (-1);
+
+			/* copy path to new string */
+			_strncpy(path, target_dir, _strlen(target_dir));
+		
+			_strcat(path, "/"); /* concatenate dir name to path */
+			_strcat(path, arg);
+
+			set_OLDPWD(); /* update env vars */
+			set_PWD(path);
+
+			return (0);
+		}
+	}
+	errno = ENOENT; /* invalid path */
+	return (-1);
+}
+/**
  * cd_user - move to user home
  * Return: 0 on Success, 1 on Failure
  */
@@ -19,7 +65,7 @@ int cd_user(char *argv)
 	{
 		set_OLDPWD();
 		set_PWD(userdir);
-		 return (0);
+		return (0);
 	}
 
 	errno = ENOENT; /* invalid username - dir not found */
@@ -91,6 +137,10 @@ int set_PWD(char *value)
 
 			_strncpy(environ[i], name, name_len); /* copy var name to realloc */
 			_strcat(environ[i], value); /* concat new value to realloc */
+
+			/* if path ends with '/', replace with another null-byte */
+			if (environ[i][name_len + val_len - 1] == '/')
+				environ[i][name_len + val_len - 1] = '\0';
 
 			return (0);
 		}
