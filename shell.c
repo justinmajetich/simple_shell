@@ -1,6 +1,6 @@
 #include "shell.h"
 
-void recieve_sig(void);
+void recieve_sig(int signal);
 
 /**
  * main - loop through essential shell input and execution tasks
@@ -45,7 +45,7 @@ int main(void)
 	return (0);
 }
 
-void recieve_sig(void)
+void recieve_sig(int signal __attribute__((unused)))
 {
 	/* prints the command line prompt */
 	write(1, "\n$ ", 3);
