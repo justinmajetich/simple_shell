@@ -33,7 +33,6 @@ int main(void)
 		if (tok_array) /* if token present */
 			if ((exec_mngr(tok_array)) == -1) /* pass args to executor */
 				print_err(loop_cnt);
-				printf("\toops\n");
 
 		free_mem_list(&mem_head); /* free all allocated memory */
 
