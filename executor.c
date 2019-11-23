@@ -30,6 +30,7 @@ int exec_builtin(char *const *argv)
 	built_in fps[] = { /* stores func pointers to built-in commands */
 		{"exit", builtin_exit},
 		{"env", builtin_env},
+		{"cd", builtin_cd},
 		{NULL, NULL}
 	};
 

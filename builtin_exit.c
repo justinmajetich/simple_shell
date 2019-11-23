@@ -13,6 +13,7 @@ int builtin_exit(char *const * argv)
 
 	if (argv[1] == NULL)
 	{
+		free_static_mem_list(&static_mem_head);
 		free_mem_list(&mem_head);
 		free_static_mem_list(&static_mem_head);
 		exit(EXIT_SUCCESS);
