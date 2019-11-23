@@ -43,8 +43,10 @@ typedef struct built_ins
 } built_in;
 
 /* EXTERN VARIABLES */
-extern mem_list *mem_head;
+extern mem_list *mem_head; /* freed each session iteration */
 mem_list *mem_head;
+extern mem_list *static_mem_head; /* freed on exit of shell session */
+mem_list *static_mem_head;
 extern char **environ;
 
 /* MAIN FUNCTIONS */
@@ -61,8 +63,10 @@ int exec_external(char *const *argv);
 char *alloc_mngr(char *ptr, size_t size);
 mem_list *add_mem_node(mem_list **head, char *ptr);
 void free_mem_list(mem_list **head);
+void free_static_mem_list(mem_list **head);
 char *_realloc(char *ptr, size_t new_size);
 char *_memset(char *s, char b, unsigned int n);
+void free_my_env(void);
 
 /* STRING HELPER FUNCTIONS */
 size_t _strlen(char *s);
@@ -83,6 +87,18 @@ size_t path_check(char *const *argv);
 /* BUILT-IN FUNCTIONS */
 int builtin_exit(char *const *argv);
 int builtin_env(char *const *argv);
+int builtin_cd(char *const *argv);
+
+/* CD HELPER FUNCTIONS */
+int cd_HOME(void);
+int cd_current(void);
+int cd_prev(void);
+int cd_parent(void);
+int cd_arg(char *arg);
+int cd_user(char *argv);
+int set_PWD(char *value);
+int set_OLDPWD(void);
+char *get_target(char *var_name);
 
 /* ERROR FUNCTIONS */
 void print_err(size_t loop_cnt);
