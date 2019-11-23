@@ -1,6 +1,4 @@
 #include "shell.h"
-int set_path(char *name, char *value);
-char *get_target(char *var_name);
 /**
  * builtin_cd - change directory
  * @argv: command table
@@ -9,115 +7,151 @@ char *get_target(char *var_name);
  */
 int builtin_cd(char *const *argv)
 {
-	char *target_dir = NULL;	
-
 	/* if cd is only arg or has option "~" */
 	if (argv[1] == NULL || !(_strcmp(argv[1], "~")))
 	{
-		/* retrieve target path */
-		if ((target_dir = get_target("HOME="))) /* get home path */
-		{
-			if(chdir(target_dir) == -1) /* change dir */
-				return (-1); /* if chdir fails */
-			else
-				set_path("PWD=", target_dir);
-		}
-		else /* if get_target returns an error */
-			return (-1);
+		if (cd_HOME()) /* move to HOME directory */
+			return (-1); /* on failure */
 	}
 	else if (path_check(&argv[1])) /* if arg is path */
 	{
-		if (chdir(argv[1]) == -1) /* change dir */
-			return (-1); /* if chdir fails */
+		if (chdir(argv[1]) == 0) /* change dir */
+		{
+			set_OLDPWD();
+			set_PWD(argv[1]);
+		}
 		else
-			set_path("PWD=", argv[1]);
+			return (-1); /* if chdir fails */
 	}
 	else if (!(_strcmp(argv[1], "."))) /* if arg is ".", change to current dir */
 	{
-		if ((target_dir = get_target("PWD="))) /* get cwd path */
-		{
-			if(chdir(target_dir) == -1) /* change dir */
-				return (-1); /* if chdir fails */
-			else
-				set_path("PWD=", target_dir);
-		}
-		else /* if get_target returns an error */
-			return (-1);
+		if (cd_current()) /* move to PWD */
+			return (-1); /* failed to move */
+	}
+	else if (!(_strcmp(argv[1], "-"))) /* if arg is "-", move to OLDPWD */
+	{
+		if (cd_prev()) /* move to OLDPWD */
+			return (-1); /* failed to move */
+	}
+	else if (!(_strcmp(argv[1], ".."))) /* if arg is "..", move to parent dir */
+	{
+		if (cd_parent()) /* move to parent dir */
+			return (-1); /* failed to move */
+	} /* if arg is "~" and has chars following */
+	else if ((!(_strncmp(argv[1], "~", 1)) && (argv[1][1] != '\0')))
+	{
+		if (cd_user(argv[1])) /* move to user home */
+			return (-1); /* failed to move */
 	}
 	else
-		return (-1); /* command/options not found - EERRRRRNOOOO>>>???! */
-	
+	{
+		errno = ENOENT;
+		return (-1); /* command/options not found */
+	}
 	return (0); /* successful change of dir */
 }
 /**
- * get_target - copy target path from environ
- * @var_name: name of target env variable
- *
- * Return: target path on Success, NULL on Failure
- */
-char *get_target(char *var_name)
-{
-	char *path = NULL;
-	size_t i = 0;
-	size_t path_len = 0;
-	size_t name_len = _strlen(var_name); /* length of var name including "=" */
-
-	for (; environ[i]; i++) /* iterate thru environ */
-	{
-		/* if env variable name matches input */
-		if ((_strncmp(var_name, environ[i], name_len)) == 0)
-		{
-			/* take length of path */
-			path_len = (_strlen(environ[i]) - name_len);
-
-			/* allocate for target path */
-			path = alloc_mngr(path, (sizeof(char) * (path_len + 1)));
-			if (!path) /* if malloc fail */
-				return (NULL); /* return error */
-
-			/* copy path from env to new string */
-			_strncpy(path, &environ[i][name_len], path_len);
-
-			return (path);
-		}
-	}
-	errno = ENOENT; /* set error to f or dir not found */
-	return (NULL); /* variable not found in environ */
-}
-/**
- * set_path - set path value of environ var (PWD/OLDPWD)
- * @name: name of variable
- * @value: desired value of variable
- *
+ * cd_parent - move to parent directory
  * Return: 0 on Success, 1 on Failure
  */
-int set_path(char *name, char *value)
+int cd_parent(void)
 {
-	char *update = NULL;
-	size_t i = 0;
-	size_t val_len;
-	size_t name_len;
+	char *target_dir = NULL;
+	size_t i;
 
-	val_len = _strlen(value);
-	name_len = _strlen(name);
-
-	for (; environ[i]; i++) /* iterate thru environ */
+	/* retrieve target path */
+	target_dir = get_target("PWD=");
+	if (target_dir) /* get current path */
 	{
-		/* if env variable name matches input */
-		if ((_strncmp(name, environ[i], name_len)) == 0)
+		/* move from end of path to first '/' */
+		for (i = _strlen(target_dir); target_dir[i] != '/';)
+			i--;
+		/* iterate back to end, setting to ever byte to 0 */
+		for (; target_dir[i]; i++)
+			target_dir[i] = '\0';
+
+		if (chdir(target_dir) == 0) /* move to parent dir */
 		{
-			/* reallocate space for updated env var */
-			environ[i] = _realloc(update, (sizeof(char) * (name_len + val_len + 1)));
-			if (!environ[i]) /* if malloc fail */
-				return (-1);
-
-			_strncpy(environ[i], name, name_len); /* copy var name to realloc */
-			_strcat(environ[i], value); /* concat new value to realloc */
-
+			set_OLDPWD();
+			set_PWD(target_dir);
 			return (0);
 		}
 	}
 
-	errno = ENOENT; /* env var name not found */
-	return (-1);
+	return (-1); /* if get_target returns an error */
+}
+/**
+ * cd_prev - move to previous directory
+ * Return: 0 on Success, 1 on Failure
+ */
+int cd_prev(void)
+{
+	char *target_dir = NULL;
+
+	/* retrieve target path */
+	target_dir = get_target("OLDPWD=");
+	if (target_dir) /* get OLDPWD path */
+	{
+		if (chdir(target_dir) == 0) /* change dir */
+		{
+			set_OLDPWD();
+			set_PWD(target_dir);
+			/* print new PWD to orient user */
+			write(STDOUT_FILENO, target_dir, (_strlen(target_dir)));
+			write(STDOUT_FILENO, "\n", 1);
+			return (0);
+		}
+		else
+			return (-1); /* if chdir fails */
+	}
+
+	return (-1); /* if get_target returns an error */
+}
+/**
+ * cd_HOME - change to home directory
+ * Return: 0 on Success, -1 on Failure
+ */
+int cd_HOME(void)
+{
+	char *target_dir = NULL;
+
+	/* retrieve target path */
+	target_dir = get_target("HOME=");
+	if (target_dir) /* get home path */
+	{
+		if (chdir(target_dir) == 0) /* change dir */
+		{
+			set_OLDPWD();
+			set_PWD(target_dir);
+			return (0);
+		}
+		else
+			return (-1); /* if chdir fails */
+	}
+
+	return (-1); /* if get_target returns an error */
+}
+/**
+ * cd_current - move to current working directory
+ * Return: 0 on Success, 1 on Failure
+ */
+int cd_current(void)
+{
+	char *target_dir = NULL;
+
+	/* retrieve PWD path */
+	target_dir = get_target("PWD=");
+	if (target_dir) /* if path found */
+	{
+		if (chdir(target_dir) == 0) /* change dir */
+		{
+			set_OLDPWD();
+			set_PWD(target_dir);
+			return (0);
+		}
+		else
+			return (-1); /* if chdir fails */
+	}
+
+	return (-1); /* if get_target returns an error */
 }

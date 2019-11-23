@@ -74,7 +74,6 @@ int _strncmp(char *s1, char *s2, size_t n);
 int _strcmp(char *s1, char *s2);
 char *_strcat(char *dest, char *src);
 char *_revstr(char *s);
-char **clone_env(void);
 
 /* NUMBER HELP */
 char *_itoa(size_t number, char *buffer, int base);
@@ -88,6 +87,16 @@ size_t path_check(char *const *argv);
 int builtin_exit(char *const *argv);
 int builtin_env(char *const *argv);
 int builtin_cd(char *const *argv);
+
+/* CD HELPER FUNCTIONS */
+int cd_HOME(void);
+int cd_current(void);
+int cd_prev(void);
+int cd_parent(void);
+int cd_user(char *argv);
+int set_PWD(char *value);
+int set_OLDPWD(void);
+char *get_target(char *var_name);
 
 /* ERROR FUNCTIONS */
 void print_err(size_t loop_cnt);
