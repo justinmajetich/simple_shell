@@ -51,7 +51,7 @@ extern char **environ;
 
 /* MAIN FUNCTIONS */
 char **_strtok(char *line);
-ssize_t _getline(char **line, size_t *line_size);
+ssize_t _getline(char **line);
 char **get_path(char * const *argv);
 
 /* EXECUTION FUNCTIONS */

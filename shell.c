@@ -11,7 +11,6 @@ int main(void)
 {
 	char *line = NULL;
 	char **tok_array = NULL;
-	size_t line_size = 0;
 	size_t loop_cnt = 1; /* count iterations */
 
 	do {
@@ -19,13 +18,21 @@ int main(void)
 		tok_array = NULL;
 
 		/* print command prompt */
-		write(STDOUT_FILENO, "$ ", 2);
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "$ ", 2);
 
 		/* accounts for [CTRL + c] */
 		signal(SIGINT, recieve_sig);
 
 		/* read command line */
-		_getline(&line, &line_size);
+		if ((_getline(&line)) == 0)
+		{
+			free_mem_list(&mem_head);
+			free_static_mem_list(&static_mem_head);
+			if (isatty(STDIN_FILENO))
+				write(STDOUT_FILENO, "\n", 1);
+			exit(EXIT_SUCCESS);
+		}
 
 		/* set pointer array to parsed command line */
 		tok_array = _strtok(line);

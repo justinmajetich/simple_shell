@@ -76,7 +76,6 @@ size_t count_tokens(char *line)
 				tok_amnt++;
 		it++;
 	}
-
 	return (tok_amnt);
 }
 
@@ -91,14 +90,18 @@ size_t token_length(char *line, size_t tok_need)
 {
 	size_t it = 0, tok_len = 0, tok_curr = 1;
 
+	if (tok_need == 1)
+		while (line[it] == ' ' || line[it] == '\t')
+			it++;
+
 	/* Sets the iterator to where the needed token is within line */
 	while (tok_curr < tok_need)
 	{
 		if ((it != 0 && (line[it - 1] == ' ' || line[it - 1] == '\t')))
 			if (line[it] != ' ' && line[it] != '\t')
-				tok_curr++;
+				tok_curr++;	
 
-		if (tok_curr != tok_need)
+		if (tok_curr < tok_need)
 			it++;
 	}
 
@@ -111,6 +114,5 @@ size_t token_length(char *line, size_t tok_need)
 			tok_curr++;
 		it++;
 	}
-
 	return (tok_len);
 }
