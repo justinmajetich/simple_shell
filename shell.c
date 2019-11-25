@@ -16,7 +16,7 @@ int main(void)
 	do {
 		line = NULL;
 		tok_array = NULL;
-
+		
 		/* print command prompt */
 		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, "$ ", 2);
@@ -35,7 +35,8 @@ int main(void)
 		}
 
 		/* set pointer array to parsed command line */
-		tok_array = _strtok(line);
+		if (line)
+			tok_array = _strtok(line);
 		
 		if (tok_array) /* if token present */
 			if ((exec_mngr(tok_array)) == -1) /* pass args to executor */

@@ -97,7 +97,7 @@ size_t token_length(char *line, size_t tok_need)
 	/* Sets the iterator to where the needed token is within line */
 	while (tok_curr < tok_need)
 	{
-		if ((it != 0 && (line[it - 1] == ' ' || line[it - 1] == '\t')))
+		if (it != 0 && (line[it - 1] == ' ' || line[it - 1] == '\t'))
 			if (line[it] != ' ' && line[it] != '\t')
 				tok_curr++;	
 
