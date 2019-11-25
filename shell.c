@@ -37,7 +37,7 @@ int main(void)
 		/* set pointer array to parsed command line */
 		if (line)
 			tok_array = _strtok(line);
-		
+
 		if (tok_array) /* if token present */
 			if ((exec_mngr(tok_array)) == -1) /* pass args to executor */
 				print_err(loop_cnt);

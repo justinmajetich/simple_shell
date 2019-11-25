@@ -30,7 +30,7 @@ ssize_t _getline(char **line)
 			
 			/* copy read bytes from buffer to line */
 			copied = copy_buffer(&(*line), buffer, &offset);
-			
+
 			/* if more read than copied, '\n' encountered */
 			if (copied < read_cnt)
 			{
