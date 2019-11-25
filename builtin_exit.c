@@ -5,9 +5,11 @@ int is_num(char letter);
 
 /**
  * builtin_exit - Exits the shell
- * @status: The status to exit shell with
+ * @argv: The status to exit shell with
+ *
+ * Return: Either exits the shell or returns EXIT_FAILURE
  */
-int builtin_exit(char *const * argv)
+int builtin_exit(char *const *argv)
 {
 	int answer;
 
@@ -21,7 +23,7 @@ int builtin_exit(char *const * argv)
 	{
 		answer = _atoi(argv[1]);
 
-		switch(answer)
+		switch (answer)
 		{
 			case (-1):
 				return (EXIT_FAILURE);
@@ -33,6 +35,12 @@ int builtin_exit(char *const * argv)
 	}
 }
 
+/**
+ * _atoi - Converts string into a number
+ * @status: The string to convert
+ *
+ * Return: Always the status as an int or -1
+ */
 int _atoi(char *status)
 {
 	int answer = 0, i = 0;
@@ -54,6 +62,12 @@ int _atoi(char *status)
 		return (answer);
 }
 
+/**
+ * is_num - Checks if a char is a number
+ * @letter: The char to check
+ *
+ * Return: Always 1 on success or 0 on failure
+ */
 int is_num(char letter)
 {
 	if (letter >= '0' && letter <= '9')

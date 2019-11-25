@@ -1,11 +1,12 @@
 #include "shell.h"
+
 int check_buffer(char *buffer);
 void shift_buffer(char *buffer, ssize_t offset);
 ssize_t copy_buffer(char **line, char *buffer, ssize_t *offset);
+
 /**
  * _getline - retrieve command line
  * @line: buffer to store command line
- * @line_size: length of command line
  *
  * Return: Number of lines read on success or -1 on fail
  */
@@ -25,9 +26,9 @@ ssize_t _getline(char **line)
 				return (-1);
 
 			read_total += read_cnt; /* add num of bytes last read to total */
-			
+
 			buffer[read_cnt] = '\0'; /* null-terminate buffer */
-			
+
 			/* copy read bytes from buffer to line */
 			copied = copy_buffer(&(*line), buffer, &offset);
 
@@ -35,7 +36,7 @@ ssize_t _getline(char **line)
 			if (copied < read_cnt)
 			{
 				offset = 0;
-				return (read_total); /* continue shell loop */	
+				return (read_total); /* continue shell loop */
 			}
 		}
 		read_total = 0;
@@ -47,6 +48,7 @@ ssize_t _getline(char **line)
 	}
 	return (read_total); /* return total number of bytes read */
 }
+
 /**
  * check_buffer - check if buffer is empty
  * @buffer: buffer to test
@@ -62,6 +64,7 @@ int check_buffer(char *buffer)
 
 	return (bytes);
 }
+
 /**
  * copy_buffer - copy from buffer till '\n' or '\0'
  * @line: copy dest
@@ -86,7 +89,8 @@ ssize_t copy_buffer(char **line, char *buffer, ssize_t *offset)
 			return (-1);
 
 		_strncpy((*line + *offset), buffer, cpy_cnt); /* copy cmd to line */
-		shift_buffer(buffer, (cpy_cnt + 1)); /* shift buffer contents past copied to index [0] */
+		/* shift buffer contents past copied to index [0] */
+		shift_buffer(buffer, (cpy_cnt + 1));
 
 		return (cpy_cnt);
 	}
@@ -104,13 +108,13 @@ ssize_t copy_buffer(char **line, char *buffer, ssize_t *offset)
 
 		return (cpy_cnt);
 	}
-	
+
 	return (cpy_cnt);
 }
 /**
  * shift_buffer - shift buffer contents left
  * @buffer: buffer shift
- * @offset: number of bytes to shift buffer
+ * @n: number of bytes to shift buffer
  */
 void shift_buffer(char *buffer, ssize_t n)
 {

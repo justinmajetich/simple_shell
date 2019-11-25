@@ -17,6 +17,7 @@ size_t _strlen(char *s)
 
 	return (len);
 }
+
 /**
  * *_strncpy - copies n bytes of src to dest string
  * @dest: string to copy to
@@ -44,7 +45,9 @@ char *_strncpy(char *dest, const char *src, size_t n)
 	}
 	return (dest);
 }
+
 /**
+ * _strcmp - Compares two strings
  * @s1: string to compare
  * @s2: string to compare against
  *
@@ -66,6 +69,7 @@ int _strcmp(char *s1, char *s2)
 		return (s1[i] - s2[i]);
 	return (0);
 }
+
 /**
  * _strncmp - compare strings up to n bytes
  * @s1: string to compare
@@ -91,10 +95,12 @@ int _strncmp(char *s1, char *s2, size_t n)
 
 	return (0);
 }
+
 /**
  * *_strcat - concatenates two strings
  * @dest: string to append to
  * @src: sring to append
+ *
  * Return: pointer to concatenated string
  */
 char *_strcat(char *dest, char *src)

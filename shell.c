@@ -18,7 +18,7 @@ int main(int argc __attribute__((unused)),  char **argv)
 	do {
 		line = NULL;
 		tok_array = NULL;
-		
+
 		/* print command prompt */
 		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, "$ ", 2);
