@@ -13,7 +13,7 @@ ssize_t copy_buffer(char **line, char *buffer, ssize_t *offset);
 ssize_t _getline(char **line)
 {
 	ssize_t read_cnt = 0, copied = 0;
-	static ssize_t read_total = 0;
+	static ssize_t read_total;
 	ssize_t offset = 0; /* line offset for each iteration */
 	static char buffer[1024];
 
