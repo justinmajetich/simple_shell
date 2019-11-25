@@ -13,9 +13,12 @@ int exec_mngr(char *const *argv)
 	if (r_val == 0) /* execution success */
 		return (0);
 
-	r_val = (exec_external(argv)); /* search and execute external cmd */
-	if (r_val == 0) /* execution success */
-		return (0);
+	if (err_msg == 2)
+	{
+		r_val = (exec_external(argv)); /* search and execute external cmd */
+		if (r_val == 0) /* execution success */
+			return (0);
+	}
 
 	return (-1); /* return error */
 }
@@ -45,10 +48,11 @@ int exec_builtin(char *const *argv)
 
 			if ((built_in_fp(argv)) == 0) /* execute built-in */
 				return (0); /* success */
-			else
-				return (-1); /* error */
+
+			err_msg = 3;
+			return (-1); /* error */
 		}
-	errno = ENOENT; /* no such file of dir */
+	err_msg = 2;
 	return (-1); /* command not found */
 }
 /**
@@ -84,6 +88,8 @@ int exec_external(char *const *argv)
 					return (-1);
 				case 0: /* returned to child */
 					execve(path[i], argv, environ); /* execute cmd */
+					err_msg = 1; /* errno has been set */
+
 					exit(EXIT_FAILURE); /* exits child, not parent ???? */
 				default: /* returned to parent */
 					if ((waitpid(pid, &status, 0)) == -1)
@@ -92,5 +98,7 @@ int exec_external(char *const *argv)
 						return (0); /* success */
 			}
 		}
+
+	err_msg = 2;
 	return (-1); /* file/dir not found */
 }

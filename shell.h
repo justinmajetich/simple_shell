@@ -48,10 +48,12 @@ mem_list *mem_head;
 extern mem_list *static_mem_head; /* freed on exit of shell session */
 mem_list *static_mem_head;
 extern char **environ;
+extern size_t err_msg;
+size_t err_msg;
 
 /* MAIN FUNCTIONS */
 char **_strtok(char *line);
-ssize_t _getline(char **line, size_t *line_size);
+ssize_t _getline(char **line);
 char **get_path(char * const *argv);
 
 /* EXECUTION FUNCTIONS */
@@ -78,6 +80,7 @@ char *_revstr(char *s);
 
 /* NUMBER HELP */
 char *_itoa(size_t number, char *buffer, int base);
+size_t count_digit(size_t num);
 
 /* PATH HELPER FUNCTIONS */
 size_t path_len(char *path_ptr);
@@ -101,6 +104,6 @@ int set_OLDPWD(void);
 char *get_target(char *var_name);
 
 /* ERROR FUNCTIONS */
-void print_err(size_t loop_cnt);
+void print_err(size_t loop_cnt, char *argv, char **tok_array);
 
 #endif

@@ -1,43 +1,132 @@
 #include "shell.h"
+
+int check_buffer(char *buffer);
+void shift_buffer(char *buffer, ssize_t offset);
+ssize_t copy_buffer(char **line, char *buffer, ssize_t *offset);
+
 /**
  * _getline - retrieve command line
  * @line: buffer to store command line
- * @line_size: length of command line
  *
  * Return: Number of lines read on success or -1 on fail
  */
-ssize_t _getline(char **line, size_t *line_size)
+ssize_t _getline(char **line)
 {
-	ssize_t read_cnt, read_total = 0;
-	size_t offset = 0; /* line offset for each iteration */
-	char buffer[1024];
+	ssize_t read_cnt = 0, copied = 0;
+	static ssize_t read_total;
+	ssize_t offset = 0; /* line offset for each iteration */
+	static char buffer[1024];
 
-	/* read stdin to dynamic buffer */
-	while ((read_cnt = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0)
+	if ((check_buffer(buffer)) == 0) /* if buffer is empty */
 	{
-		if (read_cnt == -1) /* check for read failure */
-			return (-1);
-		
-		if (read_cnt) /* if new text read */
+		/* read stdin to dynamic buffer */
+		while ((read_cnt = read(STDIN_FILENO, buffer, 1023)) > 0)
 		{
+			if (read_cnt == -1) /* check for read failure */
+				return (-1);
+
 			read_total += read_cnt; /* add num of bytes last read to total */
 
-			/* reallocate line to receive new text (+ 1 for null-byte) */
-			*line = alloc_mngr(*line, (sizeof(char) * (read_total + 1)));
-			if (!(*line)) /* check for reallocation fail */
+			buffer[read_cnt] = '\0'; /* null-terminate buffer */
+
+			/* copy read bytes from buffer to line */
+			copied = copy_buffer(&(*line), buffer, &offset);
+
+			/* if more read than copied, '\n' encountered */
+			if (copied < read_cnt)
 			{
-				perror("Reallocation failed");
-				return (-1);
+				offset = 0;
+				return (read_total); /* continue shell loop */
 			}
-			/* copy buffer to line from current offset */
-			_strncpy(((*line) + offset), buffer, read_cnt);
-
-			offset = read_total; /* advance line offset */
 		}
-		if ((*line)[offset - 1] == '\n') /* if line is \n terminated */
-			break; /* break read loop */
+		read_total = 0;
 	}
-	(*line)[offset - 1] = '\0'; /* null-terminate line */
+	else
+	{
+		/* copy remaining bytes from buffer up to newline */
+		copied = (copy_buffer(&(*line), buffer, &offset) + 1);
+	}
+	return (read_total); /* return total number of bytes read */
+}
 
-	return (*line_size = offset); /* return total number of bytes read */
+/**
+ * check_buffer - check if buffer is empty
+ * @buffer: buffer to test
+ *
+ * Return: number of bytes written in buffer
+ */
+int check_buffer(char *buffer)
+{
+	int bytes = 0;
+
+	while (buffer[bytes])
+		bytes++;
+
+	return (bytes);
+}
+
+/**
+ * copy_buffer - copy from buffer till '\n' or '\0'
+ * @line: copy dest
+ * @buffer: copy src
+ * @offset: already copied to line
+ *
+ * Return: bytes copied
+ */
+ssize_t copy_buffer(char **line, char *buffer, ssize_t *offset)
+{
+	size_t i = 0, cpy_cnt = 0;
+
+	/* count bytes till command end or end of buffer (i.e. '\n' or '\0') */
+	for (; buffer[i] != '\n' && buffer[i] != '\0'; i++)
+		cpy_cnt++;
+
+	if (buffer[i] == '\n')
+	{
+		/* allocate line to hold bytes to copy */
+		*line = alloc_mngr(*line, (sizeof(char) * (cpy_cnt + *offset + 1)));
+		if (!(*line)) /* check for allocation fail */
+			return (-1);
+
+		_strncpy((*line + *offset), buffer, cpy_cnt); /* copy cmd to line */
+		/* shift buffer contents past copied to index [0] */
+		shift_buffer(buffer, (cpy_cnt + 1));
+
+		return (cpy_cnt);
+	}
+	if (buffer[i] == '\0')
+	{
+		/* allocate line to hold bytes to copy */
+		*line = alloc_mngr(*line, (sizeof(char) * (cpy_cnt + *offset + 1)));
+		if (!(*line)) /* check for allocation fail */
+			return (-1);
+
+		/* copy buffer to line from current offset */
+		_strncpy((*line + *offset), buffer, (cpy_cnt));
+
+		*offset += cpy_cnt; /* advance line offset */
+
+		return (cpy_cnt);
+	}
+
+	return (cpy_cnt);
+}
+/**
+ * shift_buffer - shift buffer contents left
+ * @buffer: buffer shift
+ * @n: number of bytes to shift buffer
+ */
+void shift_buffer(char *buffer, ssize_t n)
+{
+	ssize_t i = 0;
+
+	while (buffer[n] != '\0') /* shift buffer left n bytes */
+	{
+		buffer[i] = buffer[n];
+		i++;
+		n++;
+	}
+
+	/* set remaining bytes to null */
+	_memset(&buffer[i], 0, (1024 - n)); /* memset till end of buffer */
 }

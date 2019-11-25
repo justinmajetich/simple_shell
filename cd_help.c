@@ -1,6 +1,9 @@
 #include "shell.h"
+
 /**
  * cd_arg - move to given path
+ * @arg: The directory to go to
+ *
  * Return: 0 on Success, 1 on Failure
  */
 int cd_arg(char *arg)
@@ -24,7 +27,7 @@ int cd_arg(char *arg)
 
 			/* take lengths of path and arg */
 			len = (_strlen(target_dir) + _strlen(arg));
-		
+
 			/* +2 for '/' and null-byte */
 			path = alloc_mngr(path, (sizeof(char) * (len + 2)));
 			if (!path) /* if malloc fail */
@@ -32,7 +35,7 @@ int cd_arg(char *arg)
 
 			/* copy path to new string */
 			_strncpy(path, target_dir, _strlen(target_dir));
-		
+
 			_strcat(path, "/"); /* concatenate dir name to path */
 			_strcat(path, arg);
 
@@ -45,8 +48,11 @@ int cd_arg(char *arg)
 	errno = ENOENT; /* invalid path */
 	return (-1);
 }
+
 /**
  * cd_user - move to user home
+ * @argv: User name
+ *
  * Return: 0 on Success, 1 on Failure
  */
 int cd_user(char *argv)
@@ -69,8 +75,9 @@ int cd_user(char *argv)
 	}
 
 	errno = ENOENT; /* invalid username - dir not found */
-	return (-1); 
+	return (-1);
 }
+
 /**
  * get_target - copy target path from environ
  * @var_name: name of target env variable
@@ -106,9 +113,9 @@ char *get_target(char *var_name)
 	errno = ENOENT; /* set error to f or dir not found */
 	return (NULL); /* variable not found in environ */
 }
+
 /**
  * set_PWD - set path value of environ var PWD
- * @name: name of variable
  * @value: desired value of variable
  *
  * Return: 0 on Success, 1 on Failure
@@ -122,7 +129,7 @@ int set_PWD(char *value)
 	size_t name_len = 4;
 
 	val_len = _strlen(value); /* take length of target value */
-	
+
 	for (; environ[i]; i++) /* iterate thru environ */
 	{
 		/* if env variable name matches input */
@@ -149,10 +156,9 @@ int set_PWD(char *value)
 	errno = ENOENT; /* env var name not found */
 	return (-1);
 }
+
 /**
  * set_OLDPWD - set path value of environ var OLDPWD
- * @name: name of variable
- * @value: desired value of variable
  *
  * Return: 0 on Success, 1 on Failure
  */
@@ -182,7 +188,7 @@ int set_OLDPWD(void)
 			if (!environ[i]) /* if malloc fail */
 				return (-1);
 
-			add_mem_node(&static_mem_head, environ[i]); /* add to lasting free list     */
+			add_mem_node(&static_mem_head, environ[i]); /* add to lasting free list */
 
 			_strncpy(environ[i], owd_ref, 7); /* copy OLDPWD var name to realloc */
 			_strcat(environ[i], pwd); /* concat new value to realloc */

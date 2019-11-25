@@ -104,7 +104,7 @@ char *_realloc(char *ptr, size_t new_size)
 		for (i = 0; i < old_size && i < new_size; i++)
 			*(re_ptr + i) = *(ptr + i);
 
-		free(ptr); /* free old pointer */
+		/* free(ptr); free old pointer */
 	}
 
 	/* initialize new memory */
